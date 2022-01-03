@@ -163,7 +163,7 @@ public class SampleParserDefinition implements ParserDefinition {
 		switch ( ruleElType.getRuleIndex() ) {
 			case SampleLanguageParser.RULE_function :
 				return new FunctionSubtree(node, elType);
-			case SampleLanguageParser.RULE_vardef :
+			case SampleLanguageParser.RULE_var_def :
 				return new VardefSubtree(node, elType);
 			case SampleLanguageParser.RULE_formal_arg :
 				return new ArgdefSubtree(node, elType);

@@ -17,7 +17,7 @@ import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_formal
 import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_function;
 import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_primary;
 import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_statement;
-import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_vardef;
+import static org.antlr.jetbrains.sample.parser.SampleLanguageParser.RULE_var_def;
 
 public class SampleFindUsagesProvider implements FindUsagesProvider {
 	/** Is "find usages" meaningful for a kind of definition subtree? */
@@ -52,7 +52,7 @@ public class SampleFindUsagesProvider implements FindUsagesProvider {
 			case RULE_function :
 			case RULE_call_expr :
 				return "function";
-			case RULE_vardef :
+			case RULE_var_def :
 				return "variable";
 			case RULE_formal_arg :
 				return "parameter";
