@@ -25,7 +25,7 @@ formal_args : formal_arg (',' formal_arg)* ;
 formal_arg : ID ;
 
 block
-	:  statement* BLOCK_END;
+	: BLOCK_START? statement* BLOCK_END;
 
 statement
 	:	'if' '('? expr ')'? statement ('else' statement)?	# If

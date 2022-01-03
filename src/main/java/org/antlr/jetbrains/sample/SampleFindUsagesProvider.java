@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement;
 import org.antlr.intellij.adaptor.lexer.RuleIElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.antlr.jetbrains.sample.psi.FunctionSubtree;
-import org.antlr.jetbrains.sample.psi.BehaviorSubtree;
 import org.antlr.jetbrains.sample.psi.IdentifierPSINode;
 import org.antlr.jetbrains.sample.psi.VardefSubtree;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,6 @@ public class SampleFindUsagesProvider implements FindUsagesProvider {
 	public boolean canFindUsagesFor(PsiElement psiElement) {
 		return psiElement instanceof IdentifierPSINode || // the case where we highlight the ID in def subtree itself
 			   psiElement instanceof FunctionSubtree ||   // remaining cases are for resolve() results
-			   psiElement instanceof BehaviorSubtree ||   // idk
 			   psiElement instanceof VardefSubtree;
 	}
 
