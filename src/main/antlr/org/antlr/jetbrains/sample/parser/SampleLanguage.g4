@@ -13,16 +13,31 @@ grammar SampleLanguage;
  *  or compilationUnit, etc...
  */
 script
-	:	(function|statement)* EOF
+	:	(function|define_behavior|statement|install_behavior)* EOF
 	;
 
 function
 	:	'def' ID '(' formal_args? ')' block
 	;
 
-formal_args : formal_arg (',' formal_arg)* ;
 
+define_behavior
+    : 'behavior' CAMELID paren_args? block ;
+
+install_behavior
+    : 'install' CAMELID paren_kwargs? ;
+
+// argument list
+formal_args : formal_arg (',' formal_arg)* ;
+kwargs: kwarg (',' kwarg)* ;
+
+// parenthesized arguments:
+paren_args : '(' formal_args? ')' ;
+paren_kwargs : '(' kwargs ')' ;
+
+// non-typed arguments:
 formal_arg : ID ;
+kwarg : ID ':' expr ;
 
 block
 	: BLOCK_START? statement* BLOCK_END;
@@ -30,15 +45,16 @@ block
 statement
 	:	'if' '('? expr ')'? statement ('else' statement)?	# If
 	|	'while' '(' expr ')' statement						# While
-	|	vardef  											# Assign
+	|	var_def  											# Assign
 	|	ID '[' expr ']' TO expr							    # ElementAssign
 	|	call_expr											# CallStatement
     |   'print' '(' expr? ')'								# Print
+    |   'log' expr                                          # Log
 	|	'return' expr										# Return
     |   BLOCK_END                                           # NestedBlockEnd
 	;
 
-vardef : SET ID TO expr ;
+var_def : SET ID TO expr ;
 
 expr
 	:	expr operator expr									# Op
@@ -55,17 +71,26 @@ operator  : MUL|DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|DOT ; // no
 call_expr
 	: ID LPAREN expr_list? RPAREN ;
 
+
 expr_list : expr (',' expr)* ;
+
+dictpair : expr BLOCK_START expr ;
+
+expr_dict : dictpair (',' dictpair)* ;
 
 primary
 	:	ID													# Identifier
 	|	INT													# Integer
 	|	FLOAT												# Float
 	|	STRING												# String
-	|	'[' expr_list ']'									# Vector
+	|	array           									# ArrayItem
+	|   dict                                                # DictItem
 	|	'true'												# TrueLiteral
 	|	'false'												# FalseLiteral
 	;
+
+array : '[' expr_list ']' ;
+dict : '{' expr_dict '}' ;
 
 // custom (custom rules also at the end?):
 
@@ -80,11 +105,13 @@ BLOCK_END : 'end' ;
 IF : 'if' ;
 ELSE : 'else' ;
 WHILE : 'while' ;
-SET : 'set' ;
+SET : 'set' ; // Var_defContext
 TO : 'to' ;
 RETURN : 'return' ;
-DEF : 'def' ;
+DEF : 'def' ; // FunctionContext
+BEHAVIOR : 'behavior' ; // FunctionContext
 PRINT : 'print' ;
+LOG : 'log' ;
 TYPEINT : 'int' ;
 TYPEFLOAT : 'float' ;
 TYPESTRING : 'string' ;
@@ -106,10 +133,13 @@ OR : '||' ;
 AND : '&&' ;
 DOT : ' . ' ;
 
-LINE_COMMENT : '--' .*? ('\n'|EOF)	-> channel(HIDDEN) ;
 COMMENT      : '---' .*? '---'    	-> channel(HIDDEN) ;
+LINE_COMMENT : '--' .*? ('\n'|EOF)	-> channel(HIDDEN) ;
 
-ID  : [a-zA-Z_] [a-zA-Z0-9_]* ;
+
+ID  : [a-z] [a-zA-Z0-9_]* ;
+CAMELID : [A-Z] [a-zA-Z0-9_]* ;
+
 INT : [0-9]+ ;
 FLOAT
 	:   '-'? INT '.' INT EXP?   // 1.35, 1.35E-9, 0.3, -4.5
