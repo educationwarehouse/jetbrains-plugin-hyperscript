@@ -70,13 +70,15 @@ public class SampleSyntaxHighlighter extends SyntaxHighlighterBase {
 			case SampleLanguageLexer.ID :
 				attrKey = ID;
 				break;
-			case SampleLanguageLexer.VAR :
+			case SampleLanguageLexer.SET :
+			case SampleLanguageLexer.TO :
 			case SampleLanguageLexer.WHILE :
 			case SampleLanguageLexer.IF :
 			case SampleLanguageLexer.ELSE :
 			case SampleLanguageLexer.RETURN :
 			case SampleLanguageLexer.PRINT :
-			case SampleLanguageLexer.FUNC :
+			case SampleLanguageLexer.DEF :
+			case SampleLanguageLexer.BLOCK_END :
 			case SampleLanguageLexer.TYPEINT :
 			case SampleLanguageLexer.TYPEFLOAT :
 			case SampleLanguageLexer.TYPESTRING :

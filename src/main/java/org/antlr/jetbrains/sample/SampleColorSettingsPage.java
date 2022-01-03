@@ -69,6 +69,6 @@ public class SampleColorSettingsPage implements ColorSettingsPage {
 	@NotNull
 	@Override
 	public String getDisplayName() {
-		return "Sample";
+		return "_hyperscript";
 	}
 }

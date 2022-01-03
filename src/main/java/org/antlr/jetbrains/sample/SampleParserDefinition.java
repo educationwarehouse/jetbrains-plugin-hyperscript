@@ -24,6 +24,7 @@ import org.antlr.jetbrains.sample.psi.ArgdefSubtree;
 import org.antlr.jetbrains.sample.psi.BlockSubtree;
 import org.antlr.jetbrains.sample.psi.CallSubtree;
 import org.antlr.jetbrains.sample.psi.FunctionSubtree;
+import org.antlr.jetbrains.sample.psi.BehaviorSubtree;
 import org.antlr.jetbrains.sample.psi.SamplePSIFileRoot;
 import org.antlr.jetbrains.sample.psi.VardefSubtree;
 import org.antlr.v4.runtime.Parser;

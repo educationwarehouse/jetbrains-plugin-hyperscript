@@ -27,7 +27,7 @@ compileJava {
 intellij {
     version = ideaVersion
 
-    pluginName 'antlr4-intellij-plugin-sample'
+    pluginName 'intellij-plugin-hyperscript'
     downloadSources true
     updateSinceUntilBuild false
 }

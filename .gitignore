@@ -42,3 +42,5 @@ target/
 .idea/modules
 
 .idea/misc.xml
+.idea/
+src/main/gen/

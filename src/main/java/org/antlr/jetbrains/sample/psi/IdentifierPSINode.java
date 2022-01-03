@@ -108,6 +108,7 @@ public class IdentifierPSINode extends ANTLRPsiLeafNode implements PsiNamedEleme
 					return new VariableRef(this);
 				case RULE_call_expr :
 					return new FunctionRef(this);
+				// todo: in case off install expr -> BehaviorRef
 			}
 		}
 		return null;
