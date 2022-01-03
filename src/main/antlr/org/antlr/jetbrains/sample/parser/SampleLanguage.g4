@@ -117,7 +117,11 @@ FLOAT
 	;
 fragment EXP :   [Ee] [+\-]? INT ;
 
-STRING :  '"' (ESC | ~["\\])* '"' ;
+STRING : (STRING_BASIC|STRING_ALT|STRING_INTERPOL) ;
+fragment STRING_BASIC :  '"' STRING_CONTENT '"' ; // "string"
+fragment STRING_ALT :  '\'' STRING_CONTENT '\'' ; // 'string'
+fragment STRING_INTERPOL :  '`' STRING_CONTENT '`' ; // `string`
+fragment STRING_CONTENT : (ESC | ~["\\])*;
 fragment ESC :   '\\' ["\bfnrt] ;
 
 WS : [ \t\n\r]+ -> channel(HIDDEN) ;
