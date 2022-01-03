@@ -13,39 +13,32 @@ grammar SampleLanguage;
  *  or compilationUnit, etc...
  */
 script
-	:	vardef* function* statement* EOF
+	:	(function|statement)* EOF
 	;
 
 function
-	:	'func' ID '(' formal_args? ')' (':' type)? block
+	:	'def' ID '(' formal_args? ')' block
 	;
 
 formal_args : formal_arg (',' formal_arg)* ;
 
-formal_arg : ID ':' type ;
-
-type:	'int'                                               # IntTypeSpec
-	|	'float'                                             # FloatTypeSpec
-	|	'string'                                            # StringTypeSpec
-	|	'boolean'											# BooleanTypeSpec
-	|	'[' ']'                                             # VectorTypeSpec
-	;
+formal_arg : ID ;
 
 block
-	:  '{' (statement|vardef)* '}';
+	:  statement* BLOCK_END;
 
 statement
-	:	'if' '(' expr ')' statement ('else' statement)?		# If
+	:	'if' '('? expr ')'? statement ('else' statement)?	# If
 	|	'while' '(' expr ')' statement						# While
-	|	ID '=' expr											# Assign
-	|	ID '[' expr ']' '=' expr							# ElementAssign
+	|	vardef  											# Assign
+	|	ID '[' expr ']' TO expr							    # ElementAssign
 	|	call_expr											# CallStatement
-	|	'print' '(' expr? ')'								# Print
+    |   'print' '(' expr? ')'								# Print
 	|	'return' expr										# Return
-	|	block				 								# BlockStatement
+    |   BLOCK_END                                           # NestedBlockEnd
 	;
 
-vardef : 'var' ID '=' expr ;
+vardef : SET ID TO expr ;
 
 expr
 	:	expr operator expr									# Op
@@ -53,14 +46,14 @@ expr
 	|	'!' expr											# Not
 	|	call_expr											# Call
 	|	ID '[' expr ']'										# Index
-	|	'(' expr ')'										# Parens
+	|	LPAREN expr RPAREN									# Parens
 	|	primary												# Atom
 	;
 
 operator  : MUL|DIV|ADD|SUB|GT|GE|LT|LE|EQUAL_EQUAL|NOT_EQUAL|OR|AND|DOT ; // no implicit precedence
 
 call_expr
-	: ID '(' expr_list? ')' ;
+	: ID LPAREN expr_list? RPAREN ;
 
 expr_list : expr (',' expr)* ;
 
@@ -74,22 +67,24 @@ primary
 	|	'false'												# FalseLiteral
 	;
 
+// custom (custom rules also at the end?):
+
 LPAREN : '(' ;
 RPAREN : ')' ;
-COLON : ':' ;
+COLON : 'COLON' ;
 COMMA : ',' ;
 LBRACK : '[' ;
 RBRACK : ']' ;
-LBRACE : '{' ;
-RBRACE : '}' ;
+BLOCK_START : ':' ;
+BLOCK_END : 'end' ;
 IF : 'if' ;
 ELSE : 'else' ;
 WHILE : 'while' ;
-VAR : 'var' ;
-EQUAL : '=' ;
+SET : 'set' ;
+TO : 'to' ;
 RETURN : 'return' ;
+DEF : 'def' ;
 PRINT : 'print' ;
-FUNC : 'func' ;
 TYPEINT : 'int' ;
 TYPEFLOAT : 'float' ;
 TYPESTRING : 'string' ;
@@ -111,8 +106,8 @@ OR : '||' ;
 AND : '&&' ;
 DOT : ' . ' ;
 
-LINE_COMMENT : '//' .*? ('\n'|EOF)	-> channel(HIDDEN) ;
-COMMENT      : '/*' .*? '*/'    	-> channel(HIDDEN) ;
+LINE_COMMENT : '--' .*? ('\n'|EOF)	-> channel(HIDDEN) ;
+COMMENT      : '---' .*? '---'    	-> channel(HIDDEN) ;
 
 ID  : [a-zA-Z_] [a-zA-Z0-9_]* ;
 INT : [0-9]+ ;
@@ -136,4 +131,3 @@ WS : [ \t\n\r]+ -> channel(HIDDEN) ;
 ERRCHAR
 	:	.	-> channel(HIDDEN)
 	;
-
